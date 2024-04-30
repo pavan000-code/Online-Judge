@@ -6,6 +6,7 @@ const User =  require( "./model/User");
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const Questions = require("./model/Questions");
 
 DBConnection();
 
@@ -91,6 +92,43 @@ app.post("/login", async(req, res) => {
         console.error(error.message);
     }
 });
+
+app.post('/new-question', async(req, res) => {
+    try {
+        // create a question or get the question from body/frontend:
+    const { questionName, difficulty, code, description } = req.body;
+
+    if(!(questionName && difficulty && code && description)) {
+        res.status(400).send("please enter all the details");
+    }
+    const existingQuestion = await Questions.findOne({ questionName});
+    if(existingQuestion){
+        res.status(400).send("Question already exists");
+    }
+
+    //save that question in the database
+    const question = await Questions.create({
+        questionName,
+        difficulty,
+        code,
+        description,
+    });
+    res.status(200).send("question created successfully");
+    //print the question.
+    console.log(question);
+    } catch (error) {
+        console.error(error.message);
+    }
+});
+
+app.get('/get-questions', async (req, res) => {
+    try {
+        const question = await Questions.find();
+        res.json(question);
+    } catch (error) {
+        console.error(error.message);
+    }
+})
 
 
 
