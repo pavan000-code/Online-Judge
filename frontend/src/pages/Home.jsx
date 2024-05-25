@@ -1,17 +1,19 @@
 import React from 'react'
 import AppBar from '@mui/material/AppBar';
 import  Toolbar  from '@mui/material/Toolbar';
-import { Typography, Button, styled } from '@mui/material';
+import { Typography, Button, styled, Link } from '@mui/material';
 import { CssBaseline } from '@mui/material';
 import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './home.css'
-// import { Button } from '@mui/material';
-import { Box, bgcolor } from '@mui/system';
+import { Box } from '@mui/system';
+import CodeEditor from './CodeEditor'
 
-const StyledTypography = styled(Typography)({
-    color: 'green'
-})
+
+
 const Home = () => {
+
+  
 
   return (
     <>
@@ -19,9 +21,10 @@ const Home = () => {
         <AppBar position="static" sx={{ bgcolor: "#8bc34a" }}>
             <Toolbar>
                 <Typography
+                variant='h4'
                 sx={{ mr: 2, flexGrow: 1 }}
                 >
-                    Pro Coders
+                <Link href="/" sx={{ color: 'white', textDecoration: 'none' }}>ProCoders</Link> 
                 </Typography>
                 <Box>
                 <Button 
@@ -69,6 +72,9 @@ const Home = () => {
           </div>
         </Carousel>
       </Box>
+      <Typography variant='h2' sx={{color: '#8bc34a', fontStyle:  'italic'}}>Experience Hassle free Coding.</Typography>
+      
+      <CodeEditor />
     </>
   )
 }
