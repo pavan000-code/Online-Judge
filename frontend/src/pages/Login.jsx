@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Box, TextField, Button, Typography, Container, Paper } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Paper,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4caf50',
+      main: "#4caf50",
     },
   },
 });
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,18 +37,31 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const response = await axios.post('http://localhost:8000/login', formData);
-      console.log('Login successful', response.data);
-      navigate('/dashboard'); // Redirect to dashboard page after successful login
+      const response = await axios.post(
+        "http://localhost:8000/login",
+        formData
+      );
+      const { token } = response.data;
+
+      // Store the token in localStorage
+      localStorage.setItem("authToken", token);
+
+      // Redirect to dashboard page after successful login
+      navigate("/dashboard");
     } catch (error) {
-      if (error.response && error.response.status === 400 && error.response.data === "User not found") {
-        navigate('/register'); // Redirect to register page if account does not exist
+      if (
+        error.response &&
+        error.response.status === 400 &&
+        error.response.data === "User not found"
+      ) {
+        // Redirect to register page if account does not exist
+        navigate("/register");
       } else {
-        console.error('Login error', error);
-        setError('Login failed. Please check your email and password.');
+        console.error("Login error", error);
+        setError("Login failed. Please check your email and password.");
       }
     }
   };
@@ -50,28 +70,33 @@ const Login = () => {
     <ThemeProvider theme={theme}>
       <Box
         sx={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 2fr',
-          minHeight: '100vh',
+          display: "grid",
+          gridTemplateColumns: "1fr 2fr",
+          minHeight: "100vh",
         }}
       >
         <Box
           sx={{
-            backgroundImage: 'url(/src/assets/loginbg.svg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundImage: "url(/src/assets/loginbg.svg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         />
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Container component="main" maxWidth="xs">
-            <Paper elevation={3} style={{ padding: '20px', marginTop: '30px' }}>
-              <Typography component="h1" variant="h5" align="center" color="primary">
+            <Paper elevation={3} style={{ padding: "20px", marginTop: "30px" }}>
+              <Typography
+                component="h1"
+                variant="h5"
+                align="center"
+                color="primary"
+              >
                 Login
               </Typography>
               {error && (
@@ -111,7 +136,7 @@ const Login = () => {
                   fullWidth
                   variant="contained"
                   color="primary"
-                  style={{ marginTop: '20px' }}
+                  style={{ marginTop: "20px" }}
                 >
                   Login
                 </Button>

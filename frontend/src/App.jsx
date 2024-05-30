@@ -4,7 +4,8 @@ import {BrowserRouter,Route,Routes} from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import Dashbord from './pages/Dashbord.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import QuestionDetails from "./pages/QuestionDetails.jsx";
 
 
 
@@ -17,7 +18,8 @@ function App() {
       <Route exact path="/" element = {<Home/>}/>
       <Route exact path = "/login" element = {<Login/>} />
       <Route exact path = "/register" element = {<Register/>} />
-      <Route exact path = "/dashboard" element = {<Dashbord/>} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/question/:id" element={<QuestionDetails />} />
     </Routes>
     </BrowserRouter>
   )
