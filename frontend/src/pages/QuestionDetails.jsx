@@ -74,6 +74,7 @@ const QuestionDetails = () => {
 
   const handleSubmitCode = async () => {
     try {
+      console.log("Submitting code...");
       const response = await axios.post(
         `http://localhost:8000/submit`,
         {
@@ -83,6 +84,7 @@ const QuestionDetails = () => {
           input: userInput,
         }
       );
+      console.log("Submission response:", response.data);
       setOutput(response.data.output);
     } catch (error) {
       console.error("Error submitting code", error);

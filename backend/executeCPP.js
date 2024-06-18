@@ -1,33 +1,31 @@
-const { exec } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+const { exec } = require('child_process');
+const path = require('path');
+const fs = require('fs');
 
-const outputPath = path.join(__dirname, "outputs");
+const dirOutputs = path.join(__dirname, 'outputs');
 
-if (!fs.existsSync(outputPath)) {
-    fs.mkdirSync(outputPath, { recursive: true });
+if (!fs.existsSync(dirOutputs)) {
+    fs.mkdirSync(dirOutputs, { recursive: true });
 }
 
-const executeCpp = (filepath) => {
-    const jobId = path.basename(filepath).split(".")[0];
-    const outPath = path.join(outputPath, `${jobId}.exe`);
-
+const executeCpp = (filePath, inputFilePath) => {
     return new Promise((resolve, reject) => {
-        exec(
-            `g++ ${filepath} -o ${outPath} && cd ${outputPath} && .\\${jobId}.exe`,
-            (error, stdout, stderr) => {
-                if (error) {
-                    reject({ error, stderr });
-                }
-                if (stderr) {
-                    reject(stderr);
-                }
-                resolve(stdout);
+        const jobID = path.basename(filePath, path.extname(filePath));
+        const outputFilename = `${jobID}.txt`;
+        const outputFilePath = path.join(dirOutputs, outputFilename);
+        const execCommand = inputFilePath 
+            ? `g++ ${filePath} -o ${filePath}.out && ./$(dirname ${filePath})/${jobID}.out < ${inputFilePath} > ${outputFilePath}`
+            : `g++ ${filePath} -o ${filePath}.out && ./$(dirname ${filePath})/${jobID}.out > ${outputFilePath}`;
+
+        exec(execCommand, (error, stdout, stderr) => {
+            if (error) {
+                console.error("Error during execution:", error);
+                return reject(stderr);
             }
-        );
+            const output = fs.readFileSync(outputFilePath, 'utf-8');
+            resolve(output);
+        });
     });
 };
 
-module.exports = {
-    executeCpp,
-};
+module.exports = { executeCpp };

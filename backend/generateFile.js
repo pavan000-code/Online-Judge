@@ -12,7 +12,13 @@ const generateFile = async (format, content) => {
     const jobID = uuid();
     const filename = `${jobID}.${format}`;
     const filePath = path.join(dirCodes, filename);
-    await fs.writeFileSync(filePath, content);
+    try {
+        await fs.promises.writeFile(filePath, content);
+        console.log(`Code file written at ${filePath}`);
+    } catch (error) {
+        console.error(`Error writing code file: ${error}`);
+        throw error;
+    }
     return filePath;
 };
 

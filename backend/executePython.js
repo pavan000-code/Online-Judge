@@ -8,9 +8,8 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeJava = (filepath, input) => {
+const executePython = (filepath, input) => {
   const jobId = path.basename(filepath).split(".")[0];
-  const classPath = path.join(outputPath, `${jobId}`);
   const inputFilePath = path.join(outputPath, `${jobId}.txt`);
 
   return new Promise((resolve, reject) => {
@@ -19,20 +18,17 @@ const executeJava = (filepath, input) => {
         reject(err);
       }
 
-      exec(
-        `javac ${filepath} -d ${outputPath} && java -cp ${outputPath} ${jobId} < ${inputFilePath}`,
-        (error, stdout, stderr) => {
-          if (error) {
-            reject({ error, stderr });
-          }
-          if (stderr) {
-            reject(stderr);
-          }
-          resolve(stdout);
+      exec(`python ${filepath} < ${inputFilePath}`, (error, stdout, stderr) => {
+        if (error) {
+          reject({ error, stderr });
         }
-      );
+        if (stderr) {
+          reject(stderr);
+        }
+        resolve(stdout);
+      });
     });
   });
 };
 
-module.exports = { executeJava };
+module.exports = { executePython };

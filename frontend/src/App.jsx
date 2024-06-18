@@ -6,11 +6,12 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import QuestionDetails from "./pages/QuestionDetails.jsx";
-
+import AddQuestion from './pages/AddQuestion.jsx';
+import EditQuestion from './pages/EditQuestion.jsx';
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
     <BrowserRouter>
@@ -19,7 +20,9 @@ function App() {
       <Route exact path = "/login" element = {<Login/>} />
       <Route exact path = "/register" element = {<Register/>} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/question/:id" element={<QuestionDetails />} />
+      <Route path="/question-details/:id" element={<QuestionDetails />} />
+      <Route path="/add-question" element={<AddQuestion />} />
+        <Route path="/edit-question/:id" element={<EditQuestion />} />
     </Routes>
     </BrowserRouter>
   )

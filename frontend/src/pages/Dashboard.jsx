@@ -50,8 +50,27 @@ const Dashboard = () => {
     navigate("/login");
   };
 
+  const handleDelete = async (questionId) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      await axios.delete(`http://localhost:8000/questions/${questionId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setQuestions(questions.filter((question) => question._id !== questionId));
+    } catch (error) {
+      console.error("Error deleting question", error);
+      setError("Failed to delete question");
+    }
+  };
+
+  const handleEdit = (questionId) => {
+    navigate(`/edit-question/${questionId}`);
+  };
+
   const handleCardClick = (questionId) => {
-    navigate(`/question/${questionId}`);
+    navigate(`/question-details/${questionId}`);
   };
 
   return (
@@ -73,11 +92,7 @@ const Dashboard = () => {
           )}
           <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={3}>
             {questions.map((question) => (
-              <Card
-                key={question._id}
-                onClick={() => handleCardClick(question._id)}
-                style={{ cursor: "pointer" }}
-              >
+              <Card key={question._id} style={{ cursor: "pointer" }} onClick={() => handleCardClick(question._id)}>
                 <CardContent>
                   <Typography variant="h6" component="div">
                     {question.questionName}
@@ -86,8 +101,39 @@ const Dashboard = () => {
                     Difficulty: {question.difficulty}
                   </Typography>
                 </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(question._id);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="small"
+                    color="secondary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(question._id);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </CardActions>
               </Card>
             ))}
+          </Box>
+          <Box display="flex" justifyContent="center" marginTop="20px">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/add-question")}
+            >
+              Add Question
+            </Button>
           </Box>
         </Paper>
       </Container>
