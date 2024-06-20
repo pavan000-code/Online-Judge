@@ -9,6 +9,10 @@ const jwt = require("jsonwebtoken");
 const { Question } = require('./model/Question');
 const { executeCpp } = require('./executeCPP');
 const { generateFile } = require("./generateFile");
+const {generateInputFile} = require("./generateInputFile");
+const mongoose = require("mongoose");
+const path = require("path");
+const fs = require("fs");
 
 dotenv.config();
 DBConnection();
@@ -254,29 +258,52 @@ app.post("/run", async (req, res) => {
 
 
 app.post("/submit", async (req, res) => {
-  const { language, code, input, questionId } = req.body;
+  const { language = 'cpp', code, input = '', questionId } = req.body;
 
-  console.log("Received input for /submit:", req.body);
+  if (!code) {
+    return res.status(400).json({ success: false, error: "Empty code!" });
+  }
 
   try {
+    console.log("Received input for /submit:", req.body);
+
     const question = await Question.findById(questionId);
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
 
-    const result = await executeCode(language, code, input);
+    // Generate file with code
+    const filePath = await generateFile(language, code);
+    console.log("Generated file at:", filePath);
 
-    const passedAllTestCases = question.testCases.every((testCase) => {
-      const { stdout } = executeCode(language, code, testCase.input);
-      return stdout.trim() === testCase.output.trim();
-    });
+    // Write user input to a file if provided
+    let inputFilePath = null;
+    if (input) {
+      inputFilePath = await generateInputFile(input);
+      console.log("Input file created at:", inputFilePath);
+    }
 
-    res.status(200).json({ output: result.stdout, passedAllTestCases });
+    // Execute the code with the initial input and store the result
+    const result = await executeCpp(filePath, inputFilePath);
+    console.log("Execution result:", result);
+
+    // Check against test cases
+    const passedAllTestCases = await Promise.all(
+      question.testCases.map(async (testCase) => {
+        const testCaseInputFilePath = await generateInputFile(testCase.input);
+        const testCaseOutput = await executeCpp(filePath, testCaseInputFilePath);
+        return testCaseOutput.trim() === testCase.output.trim();
+      })
+    );
+
+    res.status(200).json({ output: result, passedAllTestCases: passedAllTestCases.every(Boolean) });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: error.message });
+    console.error('Error in /submit route:', error);
+    res.status(500).json({ error: "Failed to submit code", details: error.message });
   }
 });
+
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Listening on ${process.env.PORT}`);

@@ -31,19 +31,17 @@ const QuestionDetails = () => {
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [userInput, setUserInput] = useState("");
+  const [submissionResult, setSubmissionResult] = useState("");
 
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get(
-          `http://localhost:8000/questions/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`http://localhost:8000/questions/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setQuestion(response.data);
         setCode(response.data.code); // Set the initial code if any
       } catch (error) {
@@ -56,6 +54,8 @@ const QuestionDetails = () => {
   }, [id]);
 
   const handleRunCode = async () => {
+    setOutput(""); // Clear the output box
+    setSubmissionResult(""); // Clear the submission result
     try {
       const response = await axios.post(
         `http://localhost:8000/run`,
@@ -73,6 +73,8 @@ const QuestionDetails = () => {
   };
 
   const handleSubmitCode = async () => {
+    setOutput(""); // Clear the output box
+    setSubmissionResult(""); // Clear the submission result
     try {
       console.log("Submitting code...");
       const response = await axios.post(
@@ -85,16 +87,26 @@ const QuestionDetails = () => {
         }
       );
       console.log("Submission response:", response.data);
+      const passedAllTestCases = response.data.passedAllTestCases;
+      if (passedAllTestCases) {
+        setSubmissionResult("Code submitted successfully");
+      } else {
+        setSubmissionResult("Please check your code. It did not pass all the test cases.");
+      }
       setOutput(response.data.output);
     } catch (error) {
       console.error("Error submitting code", error);
-      setOutput("Failed to submit code");
+      setSubmissionResult("Failed to submit code");
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     navigate("/login");
+  };
+
+  const handleGoBack = () => {
+    navigate("/dashboard");
   };
 
   if (error) {
@@ -114,9 +126,21 @@ const QuestionDetails = () => {
       <Container component="main" maxWidth="lg">
         <Paper elevation={3} style={{ padding: "20px", marginTop: "30px" }}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography component="h1" variant="h5" color="primary" gutterBottom>
-              {question.questionName}
-            </Typography>
+            <Box display="flex" alignItems="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleGoBack}
+                style={{ marginRight: "10px" }}
+              >
+                Go Back
+              </Button>
+              <Box>
+                <Typography component="h1" variant="h5" color="primary" gutterBottom>
+                  {question.questionName}
+                </Typography>
+              </Box>
+            </Box>
             <Box display="flex" alignItems="center">
               <Select
                 value={language}
@@ -130,7 +154,7 @@ const QuestionDetails = () => {
               </Select>
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#2e7d32", color: "white" }}
+                color="primary"
                 onClick={handleLogout}
               >
                 Logout
@@ -180,16 +204,17 @@ const QuestionDetails = () => {
             />
           </Box>
           <Box mt={2} display="flex" justifyContent="space-between">
-            <Button variant="contained" color="primary" onClick={handleRunCode} style={{ backgroundColor: "#4caf50" }}>
+            <Button variant="contained" color="primary" onClick={handleRunCode}>
               Run
             </Button>
-            <Button variant="contained" color="primary" onClick={handleSubmitCode} style={{ backgroundColor: "#4caf50" }}>
+            <Button variant="contained" color="primary" onClick={handleSubmitCode}>
               Submit
             </Button>
           </Box>
           <Box mt={2}>
             <Typography variant="h6">Output:</Typography>
             <Paper elevation={1} style={{ padding: "10px", backgroundColor: "#f5f5f5" }}>
+              <pre>{submissionResult}</pre>
               <pre>{output}</pre>
             </Paper>
           </Box>

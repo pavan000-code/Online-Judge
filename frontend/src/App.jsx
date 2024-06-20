@@ -22,7 +22,8 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/question-details/:id" element={<QuestionDetails />} />
       <Route path="/add-question" element={<AddQuestion />} />
-        <Route path="/edit-question/:id" element={<EditQuestion />} />
+      <Route path="/edit-question/:questionId" element={<EditQuestion />} />
+
     </Routes>
     </BrowserRouter>
   )

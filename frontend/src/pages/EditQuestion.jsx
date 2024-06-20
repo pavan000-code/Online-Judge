@@ -75,6 +75,15 @@ const EditQuestion = () => {
     }
   };
 
+  const handleTestCaseChange = (index, field, value) => {
+    const updatedTestCases = [...testCases];
+    updatedTestCases[index] = {
+      ...updatedTestCases[index],
+      [field]: value,
+    };
+    setTestCases(updatedTestCases);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="sm">
@@ -116,7 +125,35 @@ const EditQuestion = () => {
               rows={8}
               fullWidth
             />
-            {/* Add test case inputs here */}
+            <Typography variant="h6" gutterBottom>
+              Test Cases
+            </Typography>
+            {testCases.map((testCase, index) => (
+              <Box
+                key={index}
+                display="flex"
+                gap={2}
+                alignItems="center"
+                mb={2}
+              >
+                <TextField
+                  label={`Input ${index + 1}`}
+                  value={testCase.input}
+                  onChange={(e) =>
+                    handleTestCaseChange(index, "input", e.target.value)
+                  }
+                  fullWidth
+                />
+                <TextField
+                  label={`Output ${index + 1}`}
+                  value={testCase.output}
+                  onChange={(e) =>
+                    handleTestCaseChange(index, "output", e.target.value)
+                  }
+                  fullWidth
+                />
+              </Box>
+            ))}
             <Button
               variant="contained"
               color="primary"
