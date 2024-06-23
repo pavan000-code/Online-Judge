@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
-import MonacoEditor from '@monaco-editor/react';
+import {MonacoEditor} from '@monaco-editor/react';
 
 
 const theme = createTheme({
