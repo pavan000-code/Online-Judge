@@ -42,7 +42,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://65.1.64.51:8000/login",
+        "/api/login",
         formData
       );
       const { token } = response.data;
