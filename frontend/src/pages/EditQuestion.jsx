@@ -34,7 +34,7 @@ const EditQuestion = () => {
       try {
         const token = localStorage.getItem("authToken");
         const response = await axios.get(
-          `http://localhost:8000/questions/${questionId}`,
+          `http://65.1.64.51:8000/questions/${questionId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ const EditQuestion = () => {
     try {
       const token = localStorage.getItem("authToken");
       await axios.put(
-        `http://localhost:8000/questions/${questionId}`,
+        `http://65.1.64.51:8000/questions/${questionId}`,
         { questionName, difficulty, description, code, testCases },
         {
           headers: {

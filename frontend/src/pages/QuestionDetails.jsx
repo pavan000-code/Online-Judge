@@ -39,11 +39,14 @@ const QuestionDetails = () => {
     const fetchQuestion = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get(`http://localhost:8000/questions/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `http://65.1.64.51:8000/questions/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setQuestion(response.data);
         setCode(response.data.code); // Set the initial code if any
       } catch (error) {
@@ -60,7 +63,7 @@ const QuestionDetails = () => {
     setSubmissionResult(""); // Clear the submission result
     try {
       const response = await axios.post(
-        `http://localhost:8000/run`,
+        `http://65.1.64.51:8000/run`,
         {
           language,
           code,
@@ -80,7 +83,7 @@ const QuestionDetails = () => {
     try {
       console.log("Submitting code...");
       const response = await axios.post(
-        `http://localhost:8000/submit`,
+        `http://65.1.64.51:8000/submit`,
         {
           language,
           code,

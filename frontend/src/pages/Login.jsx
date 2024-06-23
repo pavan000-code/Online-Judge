@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import loginbg from '/public/assets/loginbg.svg';
 
 const theme = createTheme({
   palette: {
@@ -77,7 +78,7 @@ const Login = () => {
       >
         <Box
           sx={{
-            backgroundImage: "url(/src/assets/loginbg.svg)",
+            backgroundImage: `url(${loginbg})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

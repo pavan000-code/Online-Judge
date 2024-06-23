@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, TextField, Button, Typography, Container, Paper } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import loginbg from '/public/assets/loginbg.svg';
 
 const theme = createTheme({
   palette: {
@@ -41,7 +42,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/register', formData);
+      const response = await axios.post('http://65.1.64.51:8000/register', formData);
       console.log('Registration successful', response.data);
       navigate('/login'); // Redirect to login page after successful registration
     } catch (error) {
@@ -61,7 +62,7 @@ const Register = () => {
       >
         <Box
           sx={{
-            backgroundImage: 'url(/src/assets/loginbg.svg)',
+            backgroundImage: `url(${loginbg})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -166,4 +167,3 @@ const Register = () => {
 };
 
 export default Register;
-  
