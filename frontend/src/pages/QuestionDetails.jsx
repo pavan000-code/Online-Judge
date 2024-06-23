@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
-import {MonacoEditor} from '@monaco-editor/react';
+import {Editor} from '@monaco-editor/react';
 
 
 const theme = createTheme({
@@ -187,7 +187,7 @@ const QuestionDetails = () => {
           )}
           <Box mt={2}>
             <Typography variant="h6">Code Editor</Typography>
-            <MonacoEditor
+            <Editor
               height="400px"
               language={language}
               value={code}
