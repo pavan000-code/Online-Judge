@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import axios from "axios";
 import {
   Box,
@@ -12,8 +12,9 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
-import {Editor} from '@monaco-editor/react';
 
+// Lazy load the Monaco Editor
+const Editor = React.lazy(() => import("@monaco-editor/react"));
 
 const theme = createTheme({
   palette: {
@@ -187,13 +188,15 @@ const QuestionDetails = () => {
           )}
           <Box mt={2}>
             <Typography variant="h6">Code Editor</Typography>
-            <Editor
-              height="400px"
-              language={language}
-              value={code}
-              onChange={(newValue) => setCode(newValue)}
-              theme="vs-dark"
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Editor
+                height="400px"
+                language={language}
+                value={code}
+                onChange={(newValue) => setCode(newValue)}
+                theme="vs-dark"
+              />
+            </Suspense>
           </Box>
           <Box mt={2}>
             <TextField
