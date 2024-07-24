@@ -42,7 +42,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post('http://65.1.64.51:8000/register', formData);
+      const response = await axios.post('http://65.2.4.84:8000/register', formData);
       console.log('Registration successful', response.data);
       navigate('/login'); // Redirect to login page after successful registration
     } catch (error) {

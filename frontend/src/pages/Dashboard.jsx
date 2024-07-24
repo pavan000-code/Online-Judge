@@ -30,7 +30,7 @@ const Dashboard = () => {
     const fetchQuestions = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await axios.get("http://65.1.64.51:8000/questions", {
+        const response = await axios.get("http://65.2.4.84:8000/questions", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

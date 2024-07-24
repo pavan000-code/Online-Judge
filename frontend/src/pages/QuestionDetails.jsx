@@ -40,7 +40,7 @@ const QuestionDetails = () => {
       try {
         const token = localStorage.getItem("authToken");
         const response = await axios.get(
-          `http://65.1.64.51:8000/questions/${id}`,
+          `http://65.2.4.84:8000/questions/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

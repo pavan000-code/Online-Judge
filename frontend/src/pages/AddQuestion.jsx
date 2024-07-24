@@ -37,7 +37,7 @@ const AddQuestion = () => {
         return;
       }
 
-      const response = await axios.post("http://65.1.64.51:8000/questions", formData, {
+      const response = await axios.post("http://65.2.4.84:8000/questions", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
